@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -15,7 +16,7 @@ type SSE interface {
 	Err(err SSEData)
 	Data(data SSEData)
 	Done()
-	SetRetry(retry uint32) SSE
+	SetRetry(retry time.Duration) SSE
 	SetHeader(key, value string) SSE
 	SetWriter(w http.ResponseWriter) SSE
 }
@@ -59,8 +60,8 @@ func (s *sse) SetWriter(w http.ResponseWriter) SSE {
 }
 
 // SetRetry
-func (s *sse) SetRetry(retry uint32) SSE {
-	fmt.Fprintf(s.w, Retry, retry)
+func (s *sse) SetRetry(retry time.Duration) SSE {
+	fmt.Fprintf(s.w, Retry, retry.Milliseconds())
 	s.flush()
 	return s
 }
