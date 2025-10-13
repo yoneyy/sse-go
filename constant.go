@@ -9,5 +9,6 @@ const (
 	ID    = "id: %s\n"
 	Event = "event: %s\n"
 	Data  = "data: %s\n\n"
+	Retry = "retry: %d\n\n"
 	Done  = "[DONE]"
 )

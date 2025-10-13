@@ -57,6 +57,13 @@ func (s *sse) SetWriter(w http.ResponseWriter) SSE {
 	return s
 }
 
+// SetRetry
+func (s *sse) SetRetry(retry uint32) SSE {
+	fmt.Fprintf(s.w, Retry, retry)
+	s.flush()
+	return s
+}
+
 // Encode
 // encode sse messages
 func (s *sse) Encode(msg *Message) error {
@@ -68,12 +75,10 @@ func (s *sse) Encode(msg *Message) error {
 		msg.ID = uuid.NewString()
 	}
 
-	id := fmt.Appendf(nil, ID, msg.ID)
-	data := fmt.Appendf(nil, Data, msg.Data)
-	event := fmt.Appendf(nil, Event, msg.Event)
-	s.w.Write(id)
-	s.w.Write(data)
-	s.w.Write(event)
+	buf := fmt.Appendf(nil, ID, msg.ID)
+	buf = fmt.Appendf(buf, Data, msg.Data)
+	buf = fmt.Appendf(buf, Event, msg.Event)
+	s.w.Write(buf)
 	s.flush()
 	return nil
 }
