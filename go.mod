@@ -1,0 +1,5 @@
+module github.com/yoneyy/sse-go
+
+go 1.25.2
+
+require github.com/google/uuid v1.6.0
