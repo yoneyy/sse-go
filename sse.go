@@ -15,6 +15,7 @@ type SSE interface {
 	Err(err SSEData)
 	Data(data SSEData)
 	Done()
+	SetRetry(retry uint32) SSE
 	SetHeader(key, value string) SSE
 	SetWriter(w http.ResponseWriter) SSE
 }
