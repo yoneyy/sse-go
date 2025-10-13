@@ -16,6 +16,10 @@ func TestNewSSE(t *testing.T) {
 		sse.Err("internal error")
 		sse.Done()
 	})
+
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		t.Error(err)
+	}
 }
 
 func TestSetWriter(t *testing.T) {
