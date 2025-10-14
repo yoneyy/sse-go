@@ -13,9 +13,9 @@ var _ SSE = (*sse)(nil)
 
 type SSE interface {
 	Encode(msg *Message) error
-	Err(err SSEData)
-	Data(data SSEData)
-	Done()
+	Err(err SSEData) SSE
+	Data(data SSEData) SSE
+	Done() SSE
 	SetRetry(retry time.Duration) SSE
 	SetHeader(key, value string) SSE
 	SetWriter(w http.ResponseWriter) SSE
@@ -87,32 +87,35 @@ func (s *sse) Encode(msg *Message) error {
 
 // Err
 // send error messages
-func (s *sse) Err(err SSEData) {
+func (s *sse) Err(err SSEData) SSE {
 	msg := &Message{
 		Event: SSEEventError,
 		Data:  err,
 	}
 	s.Encode(msg)
+	return s
 }
 
 // Data
 // send normal messages
-func (s *sse) Data(data SSEData) {
+func (s *sse) Data(data SSEData) SSE {
 	msg := &Message{
 		Event: SSEEventMessage,
 		Data:  data,
 	}
 	s.Encode(msg)
+	return s
 }
 
 // Done
 // send the DONE message
-func (s *sse) Done() {
+func (s *sse) Done() SSE {
 	msg := &Message{
 		Event: SSEEventMessage,
 		Data:  Done,
 	}
 	s.Encode(msg)
+	return s
 }
 
 // ============================ private methods ============================
