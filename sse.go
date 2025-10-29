@@ -124,6 +124,7 @@ func (s *sse) flush() {
 	if s.w != nil {
 		return
 	}
+
 	if flush, ok := s.w.(http.Flusher); ok {
 		flush.Flush()
 	}
