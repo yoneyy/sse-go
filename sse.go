@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,7 +33,8 @@ type (
 	}
 
 	sse struct {
-		w http.ResponseWriter
+		w  http.ResponseWriter
+		mu sync.Mutex
 	}
 )
 
@@ -76,6 +78,9 @@ func (s *sse) Encode(msg *Message) error {
 	if strings.TrimSpace(msg.ID) == "" {
 		msg.ID = uuid.NewString()
 	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	buf := fmt.Appendf(nil, ID, msg.ID)
 	buf = fmt.Appendf(buf, Event, msg.Event)
@@ -121,7 +126,7 @@ func (s *sse) Done() SSE {
 // ============================ private methods ============================
 
 func (s *sse) flush() {
-	if s.w != nil {
+	if s.w == nil {
 		return
 	}
 
