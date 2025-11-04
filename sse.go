@@ -33,8 +33,8 @@ type (
 	}
 
 	sse struct {
-		w  http.ResponseWriter
 		mu sync.Mutex
+		w  http.ResponseWriter
 	}
 )
 
@@ -125,12 +125,12 @@ func (s *sse) Done() SSE {
 
 // ============================ private methods ============================
 
-func (s *sse) flush() {
-	if s.w == nil {
-		return
+func (s *sse) flush(b ...[]byte) {
+	if len(b) > 0 && s.w != nil {
+		s.w.Write(b[0])
 	}
 
-	if flush, ok := s.w.(http.Flusher); ok {
+	if flush, ok := s.w.(http.Flusher); ok && flush != nil {
 		flush.Flush()
 	}
 }
