@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -33,8 +32,7 @@ type (
 	}
 
 	sse struct {
-		mu sync.Mutex
-		w  http.ResponseWriter
+		w http.ResponseWriter
 	}
 )
 
