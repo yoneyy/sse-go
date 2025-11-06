@@ -79,9 +79,6 @@ func (s *sse) Encode(msg *Message) error {
 		msg.ID = uuid.NewString()
 	}
 
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
 	buf := fmt.Appendf(nil, ID, msg.ID)
 	buf = fmt.Appendf(buf, Event, msg.Event)
 	buf = fmt.Appendf(buf, Data, msg.Data)
